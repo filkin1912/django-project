@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<section id="game-details">
+    <h1>Game Details</h1>
+    <div class="info-section">
+        <div class="game-header">
+
+            <img class="game-img"
+                 src="{{ game.image_url }}"
+                 alt='game image'/>
+            <h1>{{ game.title }}</h1>
+            <p><span class="description">Category: {{ game.category }}</span></p>
+            <p><span class="description">Price: {{ game.price }} $</span></p>
+            <p><span class="description">Owner: {{ game.user }}</span></p>
+            {% if game.summary %}
+                <p><span class="description">Description: {{ game.summary }}</span></p>
+            {% endif %}
+
+            </div>
+                {% if game.summary %}
+                    <p class="text">
+                        <span class="description"> {{ game.summary }}</span>
+                    </p>
+                {% endif %}
+
+        <div class="buttons">
+
+            {% if is_owner %}
+                <a href="{% url 'game edit' pk=game.pk %}" class="button">Edit</a>
+                <a href="{% url 'game delete' pk=game.pk %}" class="button">Delete</a>
+            {% else %}
+                {% if not is_bought %}
+                    <a href="{% url 'game buy' pk=game.pk %}" class="button">BUY</a>
+                {% else %}
+                    <h2>You already bought this game</h2>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<footer>
+</footer>
+{% endblock %}

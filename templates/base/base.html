@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <title>GamesPlay</title>
+</head>
+
+<body>
+<div id="box">
+    <header>
+        <h1><a class="home" href="{% url 'index' %}">All Games</a></h1>
+        <nav>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'profile logout' %}">LogOut</a>
+                <a href="{% url 'bought games' pk=request.user.pk %}">Bought games</a>
+                <a href="{% url 'my games' pk=request.user.pk %}">My games</a>
+                <a href="{% url 'game create' %}">Create Game</a>
+                <a href="{% url 'profile details' pk=request.user.pk %}">Profile</a>
+            {% else %}
+                <a href="{% url 'profile login' %}"> LogIn</a>
+                <a href="{% url 'profile create' %}">Create Profile</a>
+            {% endif %}
+        </nav>
+    </header>
+</div>
+</body>
+{% block content %}
+{% endblock %}

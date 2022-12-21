@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<section id="edit-page" class="content auth">
+{#        <form id="edit-page">#}
+{#            <div class="container">#}
+    <form method="post" action="{% url 'profile edit' pk=object.pk %}">
+        <div class="container">
+            <div class="brand-logo"></div>
+            <h1>Edit Profile</h1>
+            {{ form }}
+            <input class="btn submit" type="submit" value="Save">
+            {% csrf_token %}
+        </div>
+    </form>
+{#            </div>#}
+{#        </form>#}
+</section>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+{% if not all_games %}
+    <p class="no-articles">No games yet</p>
+{% else %}
+
+    <section id="welcome-world">
+        {% for game in all_games %}
+            {%  if game.user.pk == user.pk %}
+                <div class="game">
+
+                    <div class="image-wrap">
+                        <img src="{{ game.game.image_url }}"
+                             alt="UNO">
+                    </div>
+                    <h3>{{ game.game.title }}</h3>
+                    <h1>{{ game.game.category }}</h1>
+
+    {#                <div class="data-buttons">#}
+    {#                <a href="{% url 'game details' pk=game. %}" class="btn details-btn">Details</a>#}
+    {#                </div>#}
+
+                </div>
+            {% endif %}
+        {% endfor %}
+    </section>
+{% endif %}
+
+{% endblock %}
