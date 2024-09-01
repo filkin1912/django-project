@@ -120,7 +120,7 @@ def game_edit(request, pk):
         form = GameEditForm(request.POST, instance=game)
         if form.is_valid():
             form.save()
-            return redirect('bought games')
+            return redirect('index')
 
     context = {'form': form,
                'game': game, }
