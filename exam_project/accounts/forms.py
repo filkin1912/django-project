@@ -4,10 +4,10 @@ UserModel = get_user_model()
 
 
 class ProfileCreateForm(auth_forms.UserCreationForm):
-    class Meta(auth_forms.UserCreationForm.Meta):
+    class Meta():
         model = UserModel
         fields = ('username', 'email')
-        field_classes = {'username': auth_forms.UsernameField, }
+        field_classes = {'username': auth_forms.UsernameField}
 
 
 class ProfileEditForm(auth_forms.UserChangeForm):
