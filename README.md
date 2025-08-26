@@ -182,3 +182,19 @@ Visit: `http://127.0.0.1:8000`
   - `BoughtGame` integrity
 
 ---
+
++----------------------+        +----------------------+
+| Public Storefront    |        | Private User Area    |
+| - All Games listing  |        | - Profile & Wallet   |
+| - Game details       |<------>| - Owned/Purchased     |
++-----------+----------+        | - CRUD for Games      |
+            ^                   +-----------+----------+
+            |                               |
+            | Authentication Required     | Authenticated
+            |                               |
++-----------+----------+        +-----------+----------+
+| accounts (User & Wallet)       | games (Catalog &     |
+| - AppUser, money                 |   Transactions)      |
+| - profile_picture                  | - GameModel          |
+| - profile management               | - GameAdd/Edit/Delete |
++-----------------------------------+----------------------+
