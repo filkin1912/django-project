@@ -183,18 +183,3 @@ Visit: `http://127.0.0.1:8000`
 
 ---
 
-graph TB
-    PS[Public Storefront] --- AG[All Games listing]
-    PS --- GD[Game details]
-    GD --- PUA[Private User Area]
-    PUA --- P[Profile & Wallet]
-    PUA --- O[Owned/Purchased games]
-    PUA --- CG[CRUD for Games]
-    CG --- GM[GameModel]
-    GM --- GAED[GameAdd/Edit/Delete]
-    CG --- G[games (Catalog & Transactions)]
-    P --- A[accounts (User & Wallet)]
-    PUA --- A
-    A --- UWM[AppUser, money]
-    UWM --- PP[profile_picture]
-    UWM --- PM[profile management]
