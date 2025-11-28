@@ -10,15 +10,13 @@ UserModel = get_user_model()
 
 class SignUpView(views.CreateView):
     form_class = ProfileCreateForm
-    template_name = 'profile/create-profile.html'
-    success_url = reverse_lazy('index')
+    template_name = "profile/create-profile.html"
+    success_url = reverse_lazy("index")
 
     def form_valid(self, form):
-        valid = super(SignUpView, self).form_valid(form)
-        username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password1')
-        new_user = authenticate(username=username, password=password)
-        login(self.request, new_user)
-        return valid
+        response = super().form_valid(form)
+        login(self.request, self.object)  # self.object is the new user
+        return response
 
 
 class SignInView(auth_views.LoginView):

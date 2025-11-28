@@ -18,16 +18,8 @@ class GameAddForm(GameBaseForm):
             'image_url': 'Link to Image',
         }
         widgets = {
-            'title': forms.TextInput(
-                attrs={
-                    'placeholder': 'Write title'
-                }
-            ),
-            'image_url': forms.URLInput(
-                attrs={
-                    'placeholder': 'Link to image',
-                }
-            ),
+            'title': forms.TextInput(attrs={'placeholder': 'Write title'}),
+            'image_url': forms.URLInput(attrs={'placeholder': 'Link to image'}),
         }
 
 

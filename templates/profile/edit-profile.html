@@ -1,21 +1,73 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 {% block content %}
 
-<section id="edit-page" class="content auth">
-{#        <form id="edit-page">#}
-{#            <div class="container">#}
-    <form method="post" action="{% url 'profile edit' pk=object.pk %}">
-        <div class="container">
-            <div class="brand-logo"></div>
-            <h1>Edit Profile</h1>
-            {{ form }}
-            <input class="btn submit" type="submit" value="Save">
-            {% csrf_token %}
-        </div>
-    </form>
-{#            </div>#}
-{#        </form>#}
-</section>
+    <section id="edit-page" class="content auth">
+        <form method="post" action="{% url 'profile edit' pk=object.pk %}" enctype="multipart/form-data">
+            <div class="container">
+                <div class="brand-logo"></div>
+                <h1>Edit Profile</h1>
+
+                {{ form.non_field_errors }}
+
+                <label for="{{ form.first_name.id_for_label }}">First name:</label>
+                {{ form.first_name|attr:"placeholder:First name" }}
+
+                <label for="{{ form.last_name.id_for_label }}">Last name:</label>
+                {{ form.last_name|attr:"placeholder:Last name" }}
+
+                <label for="{{ form.email.id_for_label }}">Email:</label>
+                {{ form.email|attr:"placeholder:Email" }}
+
+                <label for="{{ form.money.id_for_label }}">Money:</label>
+                {{ form.money|attr:"placeholder:Amount" }}
+
+                <label for="id_profile_picture">Profile picture:</label>
+
+                {% if object.profile_picture %}
+                    <div style="text-align:center; margin:20px 0;">
+                        <img id="current-picture" src="{{ object.profile_picture.url }}"
+                             alt="Current profile picture"
+                             style="width:240px; height:240px; object-fit:cover; border-radius:3px;">
+                    </div>
+                {% endif %}
+
+                <div style="text-align:center; margin:10px 0;">
+                    <!-- Hidden native file input -->
+                    <input type="file" name="profile_picture" id="id_profile_picture"
+                           accept="image/*" style="display:none;">
+
+                    <!-- Styled trigger button -->
+                    <button type="button" class="btn upload-btn"
+                            onclick="document.getElementById('id_profile_picture').click();">
+                        Upload picture
+                    </button>
+
+                </div>
+
+                <input class="btn submit" type="submit" value="Save">
+                {% csrf_token %}
+            </div>
+        </form>
+    </section>
+
+    <script>
+        document.getElementById("id_profile_picture").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById("preview-picture");
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "inline-block";
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = "none";
+            }
+        });
+    </script>
 
 {% endblock %}

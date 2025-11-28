@@ -18,6 +18,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    "widget_tweaks",
+
     'exam_project.accounts',
     'exam_project.games',
     'exam_project.common'
@@ -53,12 +55,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'exam_project.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',python
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -69,7 +65,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -101,8 +96,7 @@ STATICFILES_DIRS = (BASE_DIR / 'staticfiles',)
 
 AUTH_USER_MODEL = 'accounts.AppUser'
 LOGIN_REDIRECT_URL = reverse_lazy('index')
-# MEDIA_ROOT = BASE_DIR / 'mediafiles'
-# MEDIA_URL = '/media/'
-# USERNAME_FIELD????
+MEDIA_ROOT = BASE_DIR / 'mediafiles'
+MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

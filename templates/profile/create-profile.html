@@ -13,7 +13,6 @@
 <body>
 <div id="box">
     <header>
-
         <!-- navigation bar -->
         <h1><a class="home" href="{% url 'index' %}">GamesPlay</a></h1>
         <nav>
@@ -24,18 +23,26 @@
     <!-- create profile form -->
     <section id="register-page" class="content auth">
         <form method="post" action="{% url 'profile create' %}">
-
+            {% csrf_token %}
             <div class="container">
                 <div class="brand-logo"></div>
                 <h1>Create Profile</h1>
-                {{ form.username|placeholder:'Username: ' }}
-                {{ form.email|placeholder:'Email: ' }}
-                {{ form.password1|placeholder:'Password: ' }}
-                {{ form.password2|placeholder:'Repeat password: ' }}
 
-{#            <input type="hidden" name="next" value="{{ next }}">#}
-            <input class="btn submit" type="submit" value="Create Profile">
-            {% csrf_token %}
+                <!-- Show non-field errors -->
+                {{ form.non_field_errors }}
+
+                <!-- Email field -->
+                {{ form.email|placeholder:'Email: ' }}
+                {{ form.email.errors }}
+
+                <!-- Password fields -->
+                {{ form.password1|placeholder:'Password: ' }}
+                {{ form.password1.errors }}
+
+                {{ form.password2|placeholder:'Repeat password: ' }}
+                {{ form.password2.errors }}
+
+                <input class="btn submit" type="submit" value="Create Profile">
             </div>
         </form>
     </section>
@@ -43,7 +50,6 @@
     <footer>
         &copy;SoftUni Team 2022. All rights reserved.
     </footer>
-
 </div>
 </body>
 </html>

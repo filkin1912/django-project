@@ -39,7 +39,8 @@ This Django web application features:
 ### 1. Environment Setup
 ```bash
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows (PowerShell): venv\Scripts\Activate.ps1  /   # Windows (CMD)
+venv\Scripts\activate.bat
 ```
 
 ### 2. Install Dependencies
