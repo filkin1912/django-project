@@ -28,12 +28,14 @@ def game_add(request):
     if request.method == 'GET':
         form = GameAddForm()
     else:
-        form = GameAddForm(request.POST)
+        form = GameAddForm(request.POST, request.FILES)
         if form.is_valid():
             game = form.save(commit=False)
             game.user = request.user
             game.save()
             return redirect('index')
+        else:
+            print(form.errors)
 
     context = {
         'form': form,
@@ -46,12 +48,12 @@ def game_details(request, pk):
     game = GameModel.objects.filter(pk=pk).get()
     user = AppUser.objects.filter(pk=request.user.pk).get()
     is_owner = request.user.pk == game.user.pk
-    is_bought = BoughtGame.objects.filter(user=user, game=game)
+    is_bought = BoughtGame.objects.filter(user=user, game=game).exists()
 
     context = {
         'game': game,
         'is_owner': is_owner,
-        'is_bought': is_bought.ordered,
+        'is_bought': is_bought,
     }
     return render(request, 'game/details-game.html', context, )
 
@@ -111,20 +113,21 @@ def game_buy(request, pk):
     return render(request, 'game/buy-game.html', context)
 
 
+@login_required
 def game_edit(request, pk):
-    game = GameModel.objects.filter(pk=pk).get()
+    game = GameModel.objects.get(pk=pk)
 
     if request.method == 'GET':
         form = GameEditForm(instance=game)
     else:
-        form = GameEditForm(request.POST, instance=game)
+        form = GameEditForm(request.POST, request.FILES, instance=game)
         if form.is_valid():
-            form.save()
+            form.save()  # user stays the same
             return redirect('index')
+        else:
+            print(form.errors)
 
-    context = {'form': form,
-               'game': game, }
-
+    context = {'form': form, 'game': game}
     return render(request, 'game/edit-game.html', context)
 
 

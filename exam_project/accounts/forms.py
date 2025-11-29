@@ -8,7 +8,12 @@ UserModel = get_user_model()
 class ProfileCreateForm(UserCreationForm):
     class Meta:
         model = UserModel
-        fields = ("email",)
+        fields = ("email", "password1", "password2")
+        widgets = {
+            "email": forms.EmailInput(attrs={"placeholder": "Email", "class": "form-control"}),
+            "password1": forms.PasswordInput(attrs={"placeholder": "Password", "class": "form-control"}),
+            "password2": forms.PasswordInput(attrs={"placeholder": "Repeat password", "class": "form-control"}),
+        }
 
 
 class ProfileEditForm(forms.ModelForm):

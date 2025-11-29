@@ -8,19 +8,26 @@ class GameBaseForm(forms.ModelForm):
         fields = '__all__'
 
 
+# Frontend form (exclude user, because we set it in the view)
 class GameAddForm(GameBaseForm):
     class Meta:
         model = GameModel
-        fields = '__all__'
         exclude = ('user',)
         labels = {
             'title': 'Title',
-            'image_url': 'Link to Image',
+            'game_picture': 'Picture',
         }
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Write title'}),
-            'image_url': forms.URLInput(attrs={'placeholder': 'Link to image'}),
+            'game_picture': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
         }
+
+
+# Admin form (include user, so staff can assign manually)
+class GameAdminForm(GameBaseForm):
+    class Meta:
+        model = GameModel
+        fields = '__all__'
 
 
 class GameDetailsForm(GameBaseForm):

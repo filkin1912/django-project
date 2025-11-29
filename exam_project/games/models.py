@@ -31,7 +31,7 @@ class GameModel(models.Model):
     title = models.CharField(max_length=30, unique=True, null=False, blank=False, )
     category = models.CharField(max_length=Category.max_len(), choices=Category.choices(), )
     price = models.IntegerField(null=False, blank=False, validators=(validators.MinValueValidator(10),), )
-    image_url = models.URLField(null=True, blank=True, )
+    game_picture = models.ImageField(upload_to="game_pics/", blank=True, null=True)
     summary = models.TextField(null=True, blank=True, )
     user = models.ForeignKey(UserModel, default=None, on_delete=models.CASCADE, )
 

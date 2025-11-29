@@ -1,8 +1,8 @@
+{% load widget_tweaks %}
 {% load static %}
 {% load placeholders %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,42 +12,40 @@
 <body>
 <div id="box">
     <header>
-        <!-- navigation bar -->
         <h1><a class="home" href="{% url 'index' %}">GamesPlay</a></h1>
         <nav>
             <a href="{% url 'profile create' %}">Create Profile</a>
         </nav>
     </header>
-
-    <!-- login form -->
+    <p class="no-articles">LOGIN</p>
     <section id="register-page" class="content auth">
-       <form method="post" action="{% url 'profile login' %}">
+
+        <form method="post" action="{% url 'profile login' %}">
             {% csrf_token %}
             <div class="container">
                 <div class="brand-logo"></div>
-                <h1>LOGIN</h1>
 
-                <!-- Show global errors (wrong email/password, inactive account) -->
                 {{ form.non_field_errors }}
 
-                <!-- Email field -->
-                {{ form.username|placeholder:'Email' }}
-                {{ form.username.errors }}
+                <div class="form-group">
+                    {{ form.username|placeholder:'Email'|attr:"class:form-control" }}
+                    {{ form.username.errors }}
+                </div>
 
-                <!-- Password field -->
-                {{ form.password|placeholder:'*********' }}
-                {{ form.password.errors }}
+                <div class="form-group">
+                    {{ form.password|placeholder:'Password'|attr:"class:form-control" }}
+                    {{ form.password.errors }}
+                </div>
 
                 <input type="hidden" name="next" value="{{ next }}">
-                <input class="btn submit" type="submit" value="Login Profile">
+                <button type="submit" class="btn btn--submit">Login Profile</button>
             </div>
-       </form>
-     </section>
+        </form>
+    </section>
 
-     <!-- footer -->
-     <footer>
-         SoftUni Team 2022. All rights reserved.
-     </footer>
+    <footer>
+        &copy;Vasil Filkin 2025
+    </footer>
 </div>
 </body>
 </html>

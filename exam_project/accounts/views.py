@@ -4,7 +4,6 @@ from django.urls import reverse_lazy
 from exam_project.accounts.forms import ProfileCreateForm
 from django.views import generic as views
 
-
 UserModel = get_user_model()
 
 
@@ -15,8 +14,13 @@ class SignUpView(views.CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        login(self.request, self.object)  # self.object is the new user
+        login(self.request, self.object)  # логва новия потребител
         return response
+
+    def form_invalid(self, form):
+        # Тук ще видите грешките в конзолата
+        print(form.errors)
+        return super().form_invalid(form)
 
 
 class SignInView(auth_views.LoginView):
