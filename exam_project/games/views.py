@@ -7,6 +7,8 @@ from exam_project.accounts.models import AppUser
 from exam_project.common.models import BoughtGame
 from exam_project.games.forms import GameAddForm, GameEditForm, GameDeleteForm
 from exam_project.games.models import GameModel
+from exam_project.common.models import GameComment
+from exam_project.common.forms import GameCommentForm
 
 
 class IndexView(views.ListView):
@@ -44,8 +46,7 @@ def my_games(request, pk):
     for game in all_games:
         if game.user.pk == pk:
             games.append(game)
-    context = {'games': games,
-               'hide_buttons': True, }
+    context = {'games': games, 'hide_button_buy': True, }
     return render(request, 'my-games.html', context)
 
 
@@ -71,33 +72,36 @@ def game_add(request):
 
 @login_required
 def game_details(request, pk):
-    game = GameModel.objects.filter(pk=pk).get()
-    user = AppUser.objects.filter(pk=request.user.pk).get()
-    is_owner = request.user.pk == game.user.pk
+    game = get_object_or_404(GameModel, pk=pk)
+    user = request.user
+    is_owner = user == game.user
     is_bought = BoughtGame.objects.filter(user=user, game=game).exists()
+
+    existing_comment = GameComment.objects.filter(game=game, user=user).first()
+    form = None
+
+    if request.method == 'POST' and not existing_comment:
+        form = GameCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = user
+            comment.game = game
+            comment.save()
+            return redirect('game details', pk=pk)
+    elif not existing_comment:
+        form = GameCommentForm()
+
+    comments = GameComment.objects.filter(game=game)
 
     context = {
         'game': game,
         'is_owner': is_owner,
         'is_bought': is_bought,
+        'form': form,
+        'existing_comment': existing_comment,
+        'comments': comments,
     }
-    return render(request, 'game/details-game.html', context, )
-
-
-def is_unique(game1, user1):
-    game = game1
-    user = user1
-
-    new_bought_game = BoughtGame.objects.create(user=user, game=game)
-    counter = 0
-    all_games = BoughtGame.objects.all()
-    for bought_game in all_games:
-        if bought_game.game == new_bought_game.game and bought_game.user == new_bought_game.user:
-            counter += 1
-            if counter > 1:
-                new_bought_game.delete()
-                return False
-    return True
+    return render(request, 'game/details-game.html', context)
 
 
 @login_required
