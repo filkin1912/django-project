@@ -1,5 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic as views
 from exam_project.accounts.models import AppUser
 from exam_project.common.models import BoughtGame
@@ -12,6 +14,29 @@ class IndexView(views.ListView):
     template_name = 'home-page.html'
     context_object_name = 'games'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add logged-in user explicitly
+        if self.request.user.is_authenticated:
+            context['user'] = self.request.user
+            context['profile_money'] = self.request.user.money
+        return context
+
+
+class BoughtGamesView(LoginRequiredMixin, views.ListView):
+    model = BoughtGame
+    template_name = 'bought_games.html'
+    context_object_name = 'bought_games'
+
+    def get_queryset(self):
+        # Only return games bought by the logged-in user
+        return BoughtGame.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_buttons'] = True  # ✅ add flag
+        return context
+
 
 def my_games(request, pk):
     games = []
@@ -19,7 +44,8 @@ def my_games(request, pk):
     for game in all_games:
         if game.user.pk == pk:
             games.append(game)
-    context = {'games': games, }
+    context = {'games': games,
+               'hide_buttons': True, }
     return render(request, 'my-games.html', context)
 
 
@@ -76,41 +102,31 @@ def is_unique(game1, user1):
 
 @login_required
 def game_buy(request, pk):
-    game = GameModel.objects.filter(pk=pk).get()
-    user = AppUser.objects.filter(pk=request.user.pk).get()
-    result = None
-    result1 = None
+    game = get_object_or_404(GameModel, pk=pk)
+    user = request.user
 
-    if user.money >= game.price:
-        result = is_unique(game, user)
-        result1 = True
-        if result:
-            user.money -= game.price
-            bought = True
-            message = 'You bought a game'
-            user.save()
+    # Prevent buying own game
+    if game.user == user:
+        messages.error(request, "You cannot buy your own game.")
+        return redirect("index")
 
-            context = {
-                'game': game,
-                'bought': bought,
-                'message': message,
-                'user': user,
-            }
-            return render(request, 'game/buy-game.html', context)
+    # Prevent duplicate purchase
+    if BoughtGame.objects.filter(user=user, game=game).exists():
+        messages.warning(request, "You already own this game.")
+        return redirect("index")
 
-    bought = False
-    if result1:
-        message = 'Already bought'
-    else:
-        message = 'Not enough money to buy'
+    # Check balance
+    if user.money < game.price:
+        messages.error(request, "Not enough money to buy this game.")
+        return redirect("index")
 
-    context = {
-        'game': game,
-        'bought': bought,
-        'message': message,
-        'user': user,
-    }
-    return render(request, 'game/buy-game.html', context)
+    # Deduct money and save purchase
+    user.money -= game.price
+    user.save()
+    BoughtGame.objects.create(user=user, game=game)
+
+    messages.success(request, f"You bought {game.title} successfully!")
+    return redirect("bought games")
 
 
 @login_required

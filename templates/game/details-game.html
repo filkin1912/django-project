@@ -2,43 +2,44 @@
 {% load static %}
 {% block content %}
 
-<section id="game-details">
-    <h1>Game Details</h1>
+    <section id="game-details">
+        <h1>Game Details</h1>
 
-    <div class="game-details-wrapper">
-        <!-- Game image block -->
-        <div class="game-picture-block">
-            {% if game.game_picture %}
-                <img class="entity-game-picture" src="{{ game.game_picture.url }}" alt="game picture"/>
-            {% else %}
-                <img class="entity-game-picture" src="{% static 'images/no image.jpg' %}" alt="game picture"/>
-            {% endif %}
-        </div>
-
-        <!-- Game info block -->
-        <div class="game-info-block">
-            <h2>{{ game.title }}</h2>
-            <p>Category: {{ game.category }}</p>
-            <p>Price: {{ game.price }} $</p>
-            <p>Owner: {{ game.user }}</p>
-            {% if game.summary %}
-                <p>Description: {{ game.summary }}</p>
-            {% endif %}
-
-            <div class="buttons">
-                {% if is_owner %}
-                    <a href="{% url 'game edit' pk=game.pk %}" class="btn btn--details">Edit</a>
-                    <a href="{% url 'game delete' pk=game.pk %}" class="btn btn--details">Delete</a>
+        <div class="game-details-wrapper">
+            <!-- Game image block -->
+            <div class="game-picture-block">
+                {% if game.game_picture %}
+                    <img class="entity-game-picture" src="{{ game.game_picture.url }}" alt="game picture"/>
                 {% else %}
-                    {% if not is_bought %}
-                        <a href="{% url 'game buy' pk=game.pk %}" class="btn btn--details">Buy</a>
-                    {% else %}
-                        <h2>You already bought this game</h2>
-                    {% endif %}
+                    <img class="entity-game-picture" src="{% static 'images/no image.jpg' %}" alt="game picture"/>
                 {% endif %}
             </div>
+
+            <!-- Game info block -->
+            <div class="game-info-block">
+                <h2>{{ game.title }}</h2>
+                <p>Category: {{ game.category }}</p>
+                <p>Price: {{ game.price }} $</p>
+                <p>Owner: {{ game.user }}</p>
+                {% if game.summary %}
+                    <p>Description: {{ game.summary }}</p>
+                {% endif %}
+
+                <div class="buttons">
+                    {% if is_owner %}
+                        <a href="{% url 'game edit' pk=game.pk %}" class="btn btn--details">Edit</a>
+                        <a href="{% url 'game delete' pk=game.pk %}" class="btn btn--details">Delete</a>
+                    {% else %}
+                        {% if not is_bought %}
+                            <a href="{% url 'index' %}" class="btn btn--details">Go back</a>
+                        {% else %}
+                            <h2>You already bought this game</h2>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 {% endblock %}

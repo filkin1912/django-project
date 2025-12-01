@@ -37,3 +37,10 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    @property
+    def display_name(self):
+        full_name = f"{self.first_name or ''} {self.last_name or ''}".strip()
+        if not full_name or full_name.lower() == "none none":
+            return self.email
+        return full_name

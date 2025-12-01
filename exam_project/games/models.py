@@ -1,3 +1,4 @@
+from decimal import Decimal
 from enum import Enum
 
 from django.contrib.auth import get_user_model
@@ -30,8 +31,15 @@ class Category(Choices):
 class GameModel(models.Model):
     title = models.CharField(max_length=30, unique=True, null=False, blank=False, )
     category = models.CharField(max_length=Category.max_len(), choices=Category.choices(), )
-    price = models.IntegerField(null=False, blank=False, validators=(validators.MinValueValidator(10),), )
-    game_picture = models.ImageField(upload_to="game_pics/", blank=True, null=True)
+    price = models.DecimalField(
+        max_digits=5,  # total digits (3 before + 2 after decimal)
+        decimal_places=2,  # allow two digits after decimal
+        validators=[
+            validators.MinValueValidator(Decimal('10.00')),  # minimum price
+            validators.MaxValueValidator(Decimal('999.99')),  # maximum price
+        ],
+        null=False, blank=False,)
+    game_picture = models.ImageField(upload_to="game_pics/", blank=True, null=True, default="profile_pics/no image.jpg")
     summary = models.TextField(null=True, blank=True, )
     user = models.ForeignKey(UserModel, default=None, on_delete=models.CASCADE, )
 
