@@ -49,7 +49,7 @@ pip install -r requirements.txt
 ```
 
 ### 3. Configuration
-Set environment variables:
+Set environment variables in settings.py:
 - `SECRET_KEY`
 - `DEBUG`
 - `DATABASES`
@@ -78,8 +78,9 @@ Visit: `http://127.0.0.1:8000`
 ### Models
 - **AppUser**  
   - `money`: User’s wallet balance  
-  - `profile_picture`: Optional avatar URL  
+  - `profile_picture`: Optional avatar  
   - `full_name`: Combines first and last name
+  -  `display_name`: fallback to email if name is missing
 
 ### Forms
 - `ProfileCreateForm`: Handles user registration  
@@ -97,7 +98,7 @@ Visit: `http://127.0.0.1:8000`
 
 ### Models
 - **GameModel**  
-  - `title`, `image_url`, `summary`, `price` (min: 10)  
+  - `title`, `game_picture`,`summary`, `price` (min: 10)  
   - `category`: Enum-based genre  
   - `user`: Seller reference
 
@@ -129,9 +130,11 @@ Visit: `http://127.0.0.1:8000`
 
 ### Forms
 - `BoughtGameForm`: Used to create purchase records
+- `GameCommentForm`: comment submission
 
 ### Views
 - `bought_games`: Displays games purchased by a specific user
+- `delete_comment`: allows users to delete their own comment
 
 ---
 
@@ -141,7 +144,7 @@ Visit: `http://127.0.0.1:8000`
    Creates an `AppUser` with default balance and optional profile image
 
 2. **Game Listing**:  
-   Authenticated users can list games for sale
+   Authenticated users can list games for sale. User lists games are visible to all
 
 3. **Public Storefront**:  
    Displays all games for browsing and purchase
@@ -152,6 +155,8 @@ Visit: `http://127.0.0.1:8000`
 5. **Selling**:  
    Credits the seller’s wallet with the game price
 
+6. **Comments**:
+   User leaves comment - pne per game, deletable
 ---
 
 ## 🔐 Security & UX Considerations
@@ -170,17 +175,34 @@ Visit: `http://127.0.0.1:8000`
 
 ---
 
+## 🧪 Running Tests
+
+Each test file is placed in its corresponding app folder:
+
+- `accounts/tests.py`
+- `games/tests.py`
+- `common/tests.py`
+
+- `accounts`: check user registration and login flows using Django’s test client.
+- `games`: verify game CRUD operations and purchase logic (funds deducted, seller credited, duplicates blocked).
+- `common`: ensure comment rules (one per user per game, only author can delete) and purchase tracking integrity.
+
+These tests simulate user actions via Django’s built‑in TestCase and confirm that the core business rules of 
+the app work as expected.
+
+Run all tests with:
+
+```bash
+python manage.py test
+
+```
+
 ## 📈 Extensibility & Improvements
 
 - Expand `Category` enum with more genres
 - Enforce ownership-based permissions for game edits/deletes
 - Strengthen session validation in purchase views
 - Handle edge cases for invalid user IDs
-- Add automated tests for:
-  - User registration and login
-  - Game CRUD operations
-  - Purchase logic (funds, duplicates)
-  - `BoughtGame` integrity
 
 ---
 
