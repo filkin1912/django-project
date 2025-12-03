@@ -2,70 +2,96 @@
 {% load static %}
 {% block content %}
 
-<section id="game-details">
-    <h1>Game Details</h1>
+    <section id="game-details">
+        <h1>Game Details</h1>
 
-    <div class="game-details-wrapper">
-        <!-- Game image block -->
-        <div class="game-picture-block">
-            {% if game.game_picture %}
-                <img class="entity-game-picture" src="{{ game.game_picture.url }}" alt="game picture"/>
-            {% else %}
-                <img class="entity-game-picture" src="{% static 'images/no image.jpg' %}" alt="game picture"/>
-            {% endif %}
-        </div>
-
-        <!-- Game info block -->
-        <div class="game-info-block">
-            <h2>{{ game.title }}</h2>
-            <p>Category: {{ game.category }}</p>
-            <p>Price: {{ game.price }} $</p>
-            <p>Owner: {{ game.user }}</p>
-            {% if game.summary %}
-                <p>Description: {{ game.summary }}</p>
-            {% endif %}
-
-            <div class="buttons">
-                {% if is_owner %}
-                    <a href="{% url 'game edit' pk=game.pk %}" class="btn btn--details">Edit</a>
-                    <a href="{% url 'game delete' pk=game.pk %}" class="btn btn--details">Delete</a>
+        <div class="game-details-wrapper">
+            <!-- Game image block -->
+            <div class="game-picture-block">
+                {% if game.game_picture %}
+                    <img class="entity-game-picture" src="{{ game.game_picture.url }}" alt="game picture"/>
                 {% else %}
-                    {% if not is_bought %}
-                        <a href="{% url 'index' %}" class="btn btn--details">Go back</a>
-                    {% else %}
-                        <h2>You already bought this game</h2>
-                    {% endif %}
+                    <img class="entity-game-picture" src="{% static 'images/no image.jpg' %}" alt="game picture"/>
                 {% endif %}
             </div>
+
+            <!-- Game info block -->
+            <div class="game-info-block">
+                <h2>{{ game.title }}</h2>
+
+                <table class="game-info-table">
+                    <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Category</td>
+                        <td>{{ game.category }}</td>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        <td>{{ game.price }} $</td>
+                    </tr>
+                    <tr>
+                        <td>Owner</td>
+                        <td>{{ game.user }}</td>
+                    </tr>
+                    {% if game.summary %}
+                        <tr>
+                            <td>Description</td>
+                            <td>{{ game.summary }}</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+
+                <div class="buttons">
+                    {% if is_owner %}
+                        <a href="{% url 'game edit' pk=game.pk %}" class="btn btn--submit">Edit</a>
+                        <a href="{% url 'game delete' pk=game.pk %}" class="btn btn--submit">Delete</a>
+                    {% else %}
+                        {% if not is_bought %}
+                            <a href="{% url 'index' %}" class="go-back-btn">
+                                <span class="go-back-text">Go back&nbsp;</span>
+                                <img src="{% static 'images/go-back.jpg' %}" alt="Go back icon" class="go-back-icon">
+                            </a>
+                        {% else %}
+                            <h2>You already bought this game</h2>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
         </div>
+    </section>
+
+    <!-- Comment section -->
+    <div class="comment-section">
+        <h3>Comments</h3>
+
+        {% for comment in comments %}
+            <div class="comment-box">
+                <p>{{ comment.text }}</p>
+                {% if comment.user == request.user %}
+                    <form method="post" action="{% url 'delete comment' pk=comment.pk %}">
+                        {% csrf_token %}
+                        <button class="comment-close" title="Delete">&times;</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No comments yet.</p>
+        {% endfor %}
+
+        {% if form %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.text }}
+                <button type="submit" class="btn btn--details">Submit</button>
+            </form>
+        {% endif %}
     </div>
-</section>
-
-<!-- Comment section -->
-<div class="comment-section">
-    <h3>Comments</h3>
-
-    {% for comment in comments %}
-        <div class="comment-box">
-            <p>{{ comment.text }}</p>
-            {% if comment.user == request.user %}
-                <form method="post" action="{% url 'delete comment' pk=comment.pk %}">
-                    {% csrf_token %}
-                    <button class="comment-close" title="Delete">&times;</button>
-                </form>
-            {% endif %}
-        </div>
-    {% empty %}
-        <p>No comments yet.</p>
-    {% endfor %}
-
-    {% if form %}
-        <form method="post">
-            {% csrf_token %}
-            {{ form.text }}
-            <button type="submit" class="btn btn--details">Submit</button>
-        </form>
-    {% endif %}
-</div>
 
 {% endblock %}

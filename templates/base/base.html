@@ -12,7 +12,17 @@
 <div id="box">
     <!-- Header -->
     <header>
-        <h1><a class="home" href="{% url 'index' %}">All Games</a></h1>
+        <div class="header-left">
+            <h1><a class="home" href="{% url 'index' %}">All Games</a></h1>
+
+            {% if request.resolver_match.url_name == 'index' %}
+                <form id="search-form" class="search-bar" method="get" action="">
+                    <input type="text" name="q" placeholder="Search game" class="search-input">
+                    <button type="submit" class="search-btn">GO</button>
+                </form>
+            {% endif %}
+        </div>
+
         <nav>
             {% if request.user.is_authenticated %}
                 <a href="{% url 'profile logout' %}" class="nav-btn">LogOut</a>
@@ -26,6 +36,7 @@
             {% endif %}
         </nav>
     </header>
+
 
     <!-- Main container -->
     <div class="general-app-container">
@@ -51,12 +62,15 @@
             <p>
                 Welcome,
                 {% if profile_user.display_name %}
-                    {{ profile_user.display_name }}
+                    {{ profile_user.display_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 {% else %}
-                    {{ profile_user.email }}
+                    {{ profile_user.email }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 {% endif %}
             </p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Profile balance:&nbsp;${{ profile_money|floatformat:2 }}</p>
+            <p class="profile-balance-box">
+                Balance:&nbsp;${{ profile_money|floatformat:2 }}
+            </p>
+
         </footer>
     {% else %}
         <footer>
@@ -67,10 +81,10 @@
 
 <!-- Auto-dismiss messages after 2 seconds -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        setTimeout(function() {
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
             const messages = document.querySelectorAll(".custom-message");
-            messages.forEach(function(msg) {
+            messages.forEach(function (msg) {
                 msg.classList.add("fade-out");
                 setTimeout(() => msg.style.display = "none", 500); // wait for fade
             });

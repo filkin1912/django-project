@@ -16,12 +16,31 @@ class IndexView(views.ListView):
     template_name = 'home-page.html'
     context_object_name = 'games'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(title__icontains=query)
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         # Add logged-in user explicitly
         if self.request.user.is_authenticated:
             context['user'] = self.request.user
             context['profile_money'] = self.request.user.money
+
+        query = self.request.GET.get('q')
+        context['search_query'] = query or ''
+
+        # Distinguish between no games vs no matches
+        total_games = GameModel.objects.count()
+        if total_games == 0:
+            context['no_games_yet'] = True
+        elif query and not context['games']:
+            context['no_match'] = True
+
         return context
 
 
