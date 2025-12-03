@@ -7,6 +7,7 @@ This Django web application features:
 - **Public Storefront**:  
   - “All Games” page accessible to all visitors  
   - Game browsing with detailed views
+  - Search bar on the index page to filter games by title
 
 - **Private User Area** (requires authentication):  
   - View owned/purchased games  
@@ -109,7 +110,8 @@ Visit: `http://127.0.0.1:8000`
 - `GameBuyForm`: Validate and process purchases
 
 ### Views
-- `IndexView`: Public game listing  
+- `IndexView`: Public game listing, Includes search bar functionality: 
+               filters games by title text entered in the input field
 - `my_games`: User’s own games  
 - `game_add`: Add new game  
 - `game_details`: View game info and ownership status  
@@ -147,7 +149,8 @@ Visit: `http://127.0.0.1:8000`
    Authenticated users can list games for sale. User lists games are visible to all
 
 3. **Public Storefront**:  
-   Displays all games for browsing and purchase
+   Displays all games for browsing and purchase. Visitors can filter games by title 
+   using the search bar on the index page.
 
 4. **Purchasing**:  
    Deducts funds, records ownership in `BoughtGame`
@@ -197,12 +200,4 @@ python manage.py test
 
 ```
 
-## 📈 Extensibility & Improvements
-
-- Expand `Category` enum with more genres
-- Enforce ownership-based permissions for game edits/deletes
-- Strengthen session validation in purchase views
-- Handle edge cases for invalid user IDs
-
----
 
