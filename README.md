@@ -110,8 +110,10 @@ Visit: `http://127.0.0.1:8000`
 - `GameBuyForm`: Validate and process purchases
 
 ### Views
-- `IndexView`: Public game listing, Includes search bar functionality: 
-               filters games by title text entered in the input field
+- `IndexView`: Public game listing with search bar functionality (filters games by title)  
+               and pagination (12 games per page, with navigation controls).  
+               To generate sample games for testing pagination, start the app, log in, and visit:  
+               `http://127.0.0.1:8000/seed_games`
 - `my_games`: User’s own games  
 - `game_add`: Add new game  
 - `game_details`: View game info and ownership status  

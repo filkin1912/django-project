@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic as views
 from exam_project.accounts.models import AppUser
@@ -9,16 +10,20 @@ from exam_project.games.forms import GameAddForm, GameEditForm, GameDeleteForm
 from exam_project.games.models import GameModel
 from exam_project.common.models import GameComment
 from exam_project.common.forms import GameCommentForm
+from datetime import datetime
+from django.views import generic as views
+from exam_project.games.models import GameModel
 
 
 class IndexView(views.ListView):
     model = GameModel
     template_name = 'home-page.html'
     context_object_name = 'games'
+    paginate_by = 12  # Show max 12 games per page
 
     def get_queryset(self):
-        queryset = super().get_queryset()
         query = self.request.GET.get('q')
+        queryset = GameModel.objects.all()
         if query:
             queryset = queryset.filter(title__icontains=query)
         return queryset
@@ -26,19 +31,22 @@ class IndexView(views.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Add logged-in user explicitly
+        # Add logged-in user info
         if self.request.user.is_authenticated:
             context['user'] = self.request.user
             context['profile_money'] = self.request.user.money
 
+        # Preserve search query
         query = self.request.GET.get('q')
         context['search_query'] = query or ''
 
-        # Distinguish between no games vs no matches
-        total_games = GameModel.objects.count()
-        if total_games == 0:
+        # ✅ Use context['page_obj'] — this is the Page object
+        page_obj = context['page_obj']
+
+        # Flags for empty states
+        if page_obj.paginator.count == 0:
             context['no_games_yet'] = True
-        elif query and not context['games']:
+        elif query and not page_obj.object_list:
             context['no_match'] = True
 
         return context
@@ -186,3 +194,25 @@ def game_delete(request, pk):
         'game': game,
     }
     return render(request, 'game/delete-game.html', context, )
+
+
+@login_required
+def seed_games(request):
+    import random
+    from decimal import Decimal
+
+    categories = [c[0] for c in GameModel._meta.get_field("category").choices]
+    now = datetime.now().strftime("%Y%m%d-%H%M%S")
+
+    GameModel.objects.bulk_create([
+        GameModel(
+            title=f"Game {i} - {now}",
+            category=random.choice(categories),
+            price=Decimal(random.randrange(100, 150)),
+            summary="Auto-generated",
+            user=request.user,
+        )
+        for i in range(1, 20)
+    ])
+
+    return HttpResponse("Created.")

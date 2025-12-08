@@ -69,13 +69,13 @@
 
     <!-- Comment section -->
     <div class="comment-section">
-        <h3>Comments</h3>
+        <h2>Comments</h2>
 
         {% for comment in comments %}
             <div class="comment-box">
                 <p>{{ comment.text }}</p>
                 {% if comment.user == request.user %}
-                    <form method="post" action="{% url 'delete comment' pk=comment.pk %}">
+                    <form method="post" action="{% url 'delete comment' pk=comment.pk %}" class="comment-delete-form">
                         {% csrf_token %}
                         <button class="comment-close" title="Delete">&times;</button>
                     </form>
@@ -84,6 +84,7 @@
         {% empty %}
             <p>No comments yet.</p>
         {% endfor %}
+
 
         {% if form %}
             <form method="post">
