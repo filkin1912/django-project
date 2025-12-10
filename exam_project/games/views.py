@@ -19,7 +19,13 @@ class IndexView(views.ListView):
     model = GameModel
     template_name = 'home-page.html'
     context_object_name = 'games'
-    paginate_by = 12  # Show max 12 games per page
+
+    def get_paginate_by(self, queryset):
+        try:
+            per_page = int(self.request.GET.get('per_page', 12))
+            return per_page if per_page in [4, 6, 8, 12] else 12
+        except (TypeError, ValueError):
+            return 12
 
     def get_queryset(self):
         query = self.request.GET.get('q')
@@ -31,19 +37,17 @@ class IndexView(views.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Add logged-in user info
         if self.request.user.is_authenticated:
             context['user'] = self.request.user
             context['profile_money'] = self.request.user.money
 
-        # Preserve search query
         query = self.request.GET.get('q')
         context['search_query'] = query or ''
+        context['per_page'] = self.get_paginate_by(self.get_queryset())
+        context['per_page_options'] = [4, 6, 8, 12]
 
-        # ✅ Use context['page_obj'] — this is the Page object
         page_obj = context['page_obj']
 
-        # Flags for empty states
         if page_obj.paginator.count == 0:
             context['no_games_yet'] = True
         elif query and not page_obj.object_list:
@@ -215,4 +219,4 @@ def seed_games(request):
         for i in range(1, 20)
     ])
 
-    return HttpResponse("Created.")
+    return render(request, 'game/seed_games.html')

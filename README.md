@@ -40,7 +40,10 @@ This Django web application features:
 ### 1. Environment Setup
 ```bash
 python -m venv venv
-source venv/bin/activate  # Windows (PowerShell): venv\Scripts\Activate.ps1  /   # Windows (CMD)
+source venv/bin/activate  
+# Windows (PowerShell): 
+venv\Scripts\Activate.ps1   
+# OR: 
 venv\Scripts\activate.bat
 ```
 
@@ -111,7 +114,7 @@ Visit: `http://127.0.0.1:8000`
 
 ### Views
 - `IndexView`: Public game listing with search bar functionality (filters games by title)  
-               and pagination (12 games per page, with navigation controls).  
+               and pagination (with option to select how many to show per page and navigation menu).  
                To generate sample games for testing pagination, start the app, log in, and visit:  
                `http://127.0.0.1:8000/seed_games`
 - `my_games`: User’s own games  
