@@ -7,7 +7,7 @@ from exam_project.games.forms import GameAdminForm
 class GameModelAdmin(admin.ModelAdmin):
     form = GameAdminForm  # admin uses the full form with user
 
-    list_display = ('title', 'category', 'price', 'user')
+    list_display = ('title', 'category', 'price', 'created_at', 'user')
     search_fields = ('title', 'category', 'user__email')
     ordering = ('title',)
 

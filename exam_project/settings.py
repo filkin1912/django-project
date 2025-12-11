@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from datetime import timedelta
 from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,7 +8,8 @@ SECRET_KEY = 'django-insecure-ol2x@g2v6!n_6jh$5qh-fb$75sdu214da^t=1bq&+7c!($v+cg
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# For development you can use ["*"], but in production set your domain(s)
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -19,13 +20,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "widget_tweaks",
+    'rest_framework',
+    'corsheaders',
 
     'exam_project.accounts',
     'exam_project.games',
-    'exam_project.common'
+    'exam_project.common',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # must be first for CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,6 +71,30 @@ DATABASES = {
     }
 }
 
+# CORS: allow your React dev server
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    # add your production domain here
+]
+
+# Django REST Framework defaults
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 12,
+}
+
+# SimpleJWT settings
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=200),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -83,13 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
-USE_L10N = True
-
 USE_TZ = True
 
 STATIC_URL = '/static/'
@@ -97,6 +120,7 @@ STATICFILES_DIRS = (BASE_DIR / 'staticfiles',)
 
 AUTH_USER_MODEL = 'accounts.AppUser'
 LOGIN_REDIRECT_URL = reverse_lazy('index')
+
 MEDIA_ROOT = BASE_DIR / 'mediafiles'
 MEDIA_URL = '/media/'
 

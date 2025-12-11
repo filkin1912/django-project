@@ -15,11 +15,30 @@
             {% if search_query %}
                 <input type="hidden" name="q" value="{{ search_query }}">
             {% endif %}
+            {% if sort %}
+                <input type="hidden" name="sort" value="{{ sort }}">
+            {% endif %}
             <label for="per_page">Show per page:</label>
             <select name="per_page" id="per_page" onchange="this.form.submit()">
                 {% for option in per_page_options %}
                     <option value="{{ option }}" {% if per_page == option %}selected{% endif %}>{{ option }}</option>
                 {% endfor %}
+            </select>
+        </form>
+
+        <!-- 🎮 Sort by -->
+        <form method="get" class="sort-form">
+            {% if search_query %}
+                <input type="hidden" name="q" value="{{ search_query }}">
+            {% endif %}
+            {% if per_page %}
+                <input type="hidden" name="per_page" value="{{ per_page }}">
+            {% endif %}
+            <label for="sort">Sort by:</label>
+            <select name="sort" id="sort" onchange="this.form.submit()">
+                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                <option value="price" {% if sort == 'price' %}selected{% endif %}>Price</option>
             </select>
         </form>
 
@@ -34,15 +53,15 @@
 
         <!-- 📌 Fixed Paginator -->
         <div class="fixed-paginator">
-        <span class="page-range">
-            {{ page_obj.start_index }} – {{ page_obj.end_index }} of {{ page_obj.paginator.count }}
-        </span>
+            <span class="page-range">
+                {{ page_obj.start_index }} – {{ page_obj.end_index }} of {{ page_obj.paginator.count }}
+            </span>
             <div class="page-controls">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}"
+                    <a href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
                        class="page-btn">&laquo;</a>
                     <a href="?page=
-                            {{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}"
+                            {{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
                        class="page-btn">&lsaquo;</a>
                 {% else %}
                     <span class="page-btn disabled">&laquo;</span>
@@ -63,7 +82,7 @@
                                     <span class="page-btn current">{{ num }}</span>
                                 {% else %}
                                     <a href="?page=
-                                            {{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}"
+                                            {{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
                                        class="page-btn">{{ num }}</a>
                                 {% endif %}
                             {% endif %}
@@ -73,10 +92,10 @@
 
                 {% if page_obj.has_next %}
                     <a href="?page=
-                            {{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}"
+                            {{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
                        class="page-btn">&rsaquo;</a>
                     <a href="?page=
-                            {{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}"
+                            {{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if per_page %}&per_page={{ per_page }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
                        class="page-btn">&raquo;</a>
                 {% else %}
                     <span class="page-btn disabled">&rsaquo;</span>

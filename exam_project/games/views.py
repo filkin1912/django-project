@@ -29,9 +29,20 @@ class IndexView(views.ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q')
+        sort = self.request.GET.get('sort', 'newest')
+
         queryset = GameModel.objects.all()
+
         if query:
             queryset = queryset.filter(title__icontains=query)
+
+        if sort == 'oldest':
+            queryset = queryset.order_by('created_at')
+        elif sort == 'price':
+            queryset = queryset.order_by('price')
+        else:  # default newest
+            queryset = queryset.order_by('-created_at')
+
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -42,9 +53,12 @@ class IndexView(views.ListView):
             context['profile_money'] = self.request.user.money
 
         query = self.request.GET.get('q')
+        sort = self.request.GET.get('sort', 'newest')  # 🆕 capture sort
+
         context['search_query'] = query or ''
         context['per_page'] = self.get_paginate_by(self.get_queryset())
         context['per_page_options'] = [4, 6, 8, 12]
+        context['sort'] = sort  # 🆕 add sort to context
 
         page_obj = context['page_obj']
 
