@@ -8,12 +8,16 @@ This Django web application features:
   - “All Games” page accessible to all visitors  
   - Game browsing with detailed views
   - Search bar on the index page to filter games by title
+  - Sorting options: newest, oldest, and price-based ordering 
 
 - **Private User Area** (requires authentication):  
   - View owned/purchased games  
   - Manage profile and wallet balance  
   - Add, edit, and delete games for sale
 
+- **REST API** (via Django REST Framework):  
+  - Authenticated endpoints for listing, creating, and buying games  
+  - Automatic ownership assignment to the logged-in user  
 ---
 
 ## 🔄 Core Functionalities
@@ -32,7 +36,15 @@ This Django web application features:
 
 - **Ownership Tracking**:  
   Purchases are recorded to ensure unique ownership per user-game pair
+- 
+- **Game Sorting**:  
+  Homepage supports sorting by newest, oldest, and price. Sorting choice persists across pagination.  
 
+- **Games API**:  
+  - `/api/games/` – List and create games (authenticated users only)  
+  - `/api/games/buy/` – Purchase games via API  
+  - Integrated with DRF authentication  
+  - `perform_create` ensures the authenticated user is linked to the game  
 ---
 
 ## ⚙️ Getting Started
@@ -74,6 +86,7 @@ python manage.py runserver
 ```
 
 Visit: `http://127.0.0.1:8000`
+API: `http://127.0.0.1:8000/api/games/`
 
 ---
 
@@ -123,6 +136,11 @@ Visit: `http://127.0.0.1:8000`
 - `game_buy`: Deduct funds and record purchase  
 - `game_edit` / `game_delete`: Modify or remove games
 
+### API (DRF)
+- `GamesListCreateApiView`: List and create games (authenticated users only)
+- `GameBuyApiView`: Handle purchases via API
+-  Integrated search, ordering, and authentication
+
 ### Notes
 - Custom validators (e.g., `is_unique`) prevent duplicate purchases
 
@@ -142,6 +160,23 @@ Visit: `http://127.0.0.1:8000`
 ### Views
 - `bought_games`: Displays games purchased by a specific user
 - `delete_comment`: allows users to delete their own comment
+
+---
+
+## 🎮 New Features Game Sorting:
+- Homepage now supports sorting by Newest, Oldest, and Price
+- Sorting choice persists across pagination and search results
+
+GameModel Update:
+- Added created_at field to track when each game was published
+- Enables chronological ordering of games in the storefront
+
+Games API (DRF):
+`/api/games/` – List and create games (authentication required)
+`/api/games/buy/` – Purchase games via API
+
+- Integrated with Django REST Framework authentication
+- perform_create ensures the authenticated user is automatically linked to the game
 
 ---
 
@@ -165,6 +200,12 @@ Visit: `http://127.0.0.1:8000`
 
 6. **Comments**:
    User leaves comment - pne per game, deletable
+
+7. **Sorting**:
+   Visitors can sort games by newest, oldest, or price directly on the homepage
+
+8. **API Access**: 
+   Authenticated users can interact with games programmatically via DRF endpoints (list, create, buy)
 ---
 
 ## 🔐 Security & UX Considerations
