@@ -1,0 +1,105 @@
+/* ===========================
+   Comment Section Container
+   =========================== */
+.comment-section {
+    width: 80%;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.comment-section h3,
+.comment-section h2 {
+    margin-bottom: 15px;
+    color: var(--color-light);
+    text-align: center;
+}
+
+/* ===========================
+   Individual Comment Box
+   =========================== */
+.comment-box {
+    width: 95%;
+    margin: 0px auto 16px auto;
+    padding: 16px 48px 16px 16px; /* space for delete button */
+
+    background: rgba(52, 58, 57, 0.6);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+
+    color: var(--color-light);
+    text-align: left;
+
+    position: relative; /* anchor for delete button */
+}
+
+.comment-box p {
+    margin: 0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+    color: var(--color-light);
+}
+
+/* ===========================
+   Close/Delete Button
+   =========================== */
+.comment-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    background-color: var(--color-accent);
+    color: var(--color-light);
+    border: 1px solid var(--color-light);
+    border-radius: 3%;
+
+    width: 20px;
+    height: 27px;
+    font-size: 23px;
+    font-weight: bold;
+    line-height: 24px;
+    text-align: center;
+
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.comment-close:hover {
+    background-color: #cc0000;
+    transform: scale(1.1);
+}
+
+/* ===========================
+   Comment Form
+   =========================== */
+.comment-section form {
+    width: 50%;
+    margin: 20px auto 0 auto;
+    text-align: center;
+}
+
+.comment-section textarea {
+    width: 100%;
+    display: block;
+    margin-top: -20px;
+    min-width: 400px;
+    background-color: var(--color-light);
+    border-radius: 3px;
+    padding: 3px;
+}
+
+/* ===========================
+   Comment Email
+   =========================== */
+.comment-email {
+    font-size: 108%;
+    border: 1px solid var(--color-light);
+    background-color: var(--color-primary);
+    color: var(--secondary);
+    padding: 3px 5px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+}
+

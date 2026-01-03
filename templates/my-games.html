@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Main container -->
+    <div class="general-app-container">
+        {% if no_games_yet %}
+            <p class="no-articles no-articles--welcome">NO OWNED GAMES</p>
+        {% elif no_match %}
+            <p class="no-articles no-articles--welcome">NO SUCH A GAME</p>
+        {% else %}
+            <p class="no-articles no-articles--welcome">MY GAMES</p>
+
+            <div class="game-grid-wrapper">
+                <section id="welcome-world" class="game-grid">
+                    {% for game in games %}
+                        {% include 'game/partials/game-card.html' %}
+                    {% endfor %}
+                </section>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

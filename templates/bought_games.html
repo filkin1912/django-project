@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Main container -->
+    <div class="general-app-container">
+
+        {% if not bought_games %}
+            <p class="no-articles no-articles--welcome">NO BOUGHT GAMES</p>
+
+        {% else %}
+            <!-- Heading (same style as home-page and my-games) -->
+            <p class="no-articles no-articles--welcome">BOUGHT GAMES</p>
+
+            <!-- Game Grid -->
+            <div class="game-grid-wrapper">
+                <section id="welcome-world" class="game-grid">
+                    {% for bought_game in bought_games %}
+                        {% with game=bought_game.game %}
+                            {% include 'game/partials/game-card.html' %}
+                        {% endwith %}
+                    {% endfor %}
+                </section>
+            </div>
+
+            <!-- Total spent box BELOW the grid (keeps layout identical) -->
+            <p class="total-spent-box">
+                Total spent: <strong>${{ total_spent|floatformat:2 }}</strong>
+            </p>
+
+        {% endif %}
+    </div>
+{% endblock %}
